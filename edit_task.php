@@ -8,12 +8,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['id'];
-    $tache = $_POST['tache'];
-    $description = $_POST['description'];
-    $heure_debut = $_POST['heure_debut'];
-    $heure_fin = $_POST['heure_fin'];
-    $date_tache = $_POST['date_tache'];
+    $id = htmlspecialchars($_POST['id']);
+    $tache = htmlspecialchars($_POST['tache']);
+    $description = htmlspecialchars($_POST['description']);
+    $heure_debut = htmlspecialchars($_POST['heure_debut']);
+    $heure_fin = htmlspecialchars($_POST['heure_fin']);
+    $date_tache = htmlspecialchars($_POST['date_tache']);
 
     updateTask($conn, $id, $tache, $description, $heure_debut, $heure_fin, $date_tache);
     header('Location: index.php');
