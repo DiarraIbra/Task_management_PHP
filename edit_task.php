@@ -1,10 +1,18 @@
 <?php
+session_start();
 include 'db.php';
-include 'functions.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $id = $_GET['id'];
-    $tache = getTaskById($conn, $id);
+    $sql = "SELECT * FROM taches WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$id]);
+    $tache = $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -15,7 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $heure_fin = htmlspecialchars($_POST['heure_fin']);
     $date_tache = htmlspecialchars($_POST['date_tache']);
 
-    updateTask($conn, $id, $tache, $description, $heure_debut, $heure_fin, $date_tache);
+    $sql = "UPDATE taches SET tache = ?, description = ?, heure_debut = ?, heure_fin = ?, date_tache = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt->execute([$tache, $description, $heure_debut, $heure_fin, $date_tache, $id])) {
+        $_SESSION['message'] = "Tâche mise à jour avec succès !";
+    } else {
+        $_SESSION['error'] = "Erreur lors de la mise à jour de la tâche.";
+    }
     header('Location: index.php');
     exit();
 }
@@ -35,23 +49,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <h1>Modifier la tâche</h1>
         <form action="edit_task.php" method="POST">
-            <input type="hidden" name="id" value="<?php echo $tache['id']; ?>">
+            <input type="hidden" name="id" value="<?= $tache['id'] ?>">
 
             <label for="tache">Tâche :</label>
-            <input type="text" name="tache" id="tache" value="<?php echo $tache['tache']; ?>" required>
+            <input type="text" name="tache" id="tache" value="<?= $tache['tache'] ?>" required>
 
             <label for="description">Description :</label>
-            <textarea name="description" id="description"><?php echo $tache['description']; ?></textarea>
+            <textarea name="description" id="description"><?= $tache['description'] ?></textarea>
 
             <label for="heure_debut">Heure de début :</label>
-            <input type="time" name="heure_debut" id="heure_debut" value="<?php echo $tache['heure_debut']; ?>"
-                required>
+            <input type="time" name="heure_debut" id="heure_debut" value="<?= $tache['heure_debut'] ?>" required>
 
             <label for="heure_fin">Heure de fin :</label>
-            <input type="time" name="heure_fin" id="heure_fin" value="<?php echo $tache['heure_fin']; ?>" required>
+            <input type="time" name="heure_fin" id="heure_fin" value="<?= $tache['heure_fin'] ?>" required>
 
             <label for="date_tache">Date :</label>
-            <input type="date" name="date_tache" id="date_tache" value="<?php echo $tache['date_tache']; ?>" required>
+            <input type="date" name="date_tache" id="date_tache" value="<?= $tache['date_tache'] ?>" required>
 
             <button type="submit">Enregistrer</button>
         </form>
