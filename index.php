@@ -2,22 +2,18 @@
 session_start();
 include 'db.php';
 
-// Vérifier si l'utilisateur est connecté
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
 }
 
-// Pagination
-$limit = 5; // Nombre de tâches par page
+$limit = 5;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// Récupérer le nombre total de tâches
 $totalTasks = $conn->query("SELECT COUNT(*) FROM taches")->fetchColumn();
 $totalPages = ceil($totalTasks / $limit);
 
-// Récupérer les tâches pour la page actuelle
 $sql = "SELECT * FROM taches ORDER BY date_tache, heure_debut LIMIT :limit OFFSET :offset";
 $stmt = $conn->prepare($sql);
 $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -38,6 +34,7 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
     <div class="container">
+        <a href="logout.php" style="float: right; margin: 10px;">Déconnexion</a>
         <h1>Gestion des tâches</h1>
 
         <?php if (isset($_SESSION['message'])) : ?>

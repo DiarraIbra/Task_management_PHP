@@ -3,7 +3,7 @@ session_start();
 include 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
+    //$username = ;
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
@@ -12,10 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($password !== $confirm_password) {
         $error = "Les mots de passe ne correspondent pas.";
     } else {
-        $sql = "SELECT * FROM utilisateurs WHERE username = ?";
+        $sql = "SELECT * FROM utilisateurs WHERE username = :username";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->execute([
+            'username' => $_POST['username']
+        ]);
+        $user = $stmt->fetch();
 
         if ($user) {
             $error = "Ce nom d'utilisateur est déjà pris.";
