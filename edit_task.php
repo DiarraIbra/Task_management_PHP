@@ -6,13 +6,16 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
 }
-
+// Pour afficher les informations de la tache avec id 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $id = $_GET['id'];
+    // 1 ere etape
     $sql = "SELECT * FROM taches WHERE id = ?";
+    // 2 ieme etape 
     $stmt = $conn->prepare($sql);
+    // 3 ieme etape
     $stmt->execute([$id]);
-    $tache = $stmt->fetch(PDO::FETCH_ASSOC);
+    $tache = $stmt->fetchAll();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -22,9 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $heure_debut = htmlspecialchars($_POST['heure_debut']);
     $heure_fin = htmlspecialchars($_POST['heure_fin']);
     $date_tache = htmlspecialchars($_POST['date_tache']);
-
+    // 1 ere etape
     $sql = "UPDATE taches SET tache = ?, description = ?, heure_debut = ?, heure_fin = ?, date_tache = ? WHERE id = ?";
+    // 2 ieme etape
     $stmt = $conn->prepare($sql);
+    // 3 ieme etape
     if ($stmt->execute([$tache, $description, $heure_debut, $heure_fin, $date_tache, $id])) {
         $_SESSION['message'] = "Tâche mise à jour avec succès !";
     } else {

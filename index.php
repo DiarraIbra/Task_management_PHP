@@ -38,13 +38,13 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <h1>Gestion des tâches</h1>
 
         <?php if (isset($_SESSION['message'])) : ?>
-        <div class="notification success"><?= $_SESSION['message'] ?></div>
-        <?php unset($_SESSION['message']); ?>
+            <div class="notification success"><?= $_SESSION['message'] ?></div>
+            <?php unset($_SESSION['message']); ?>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['error'])) : ?>
-        <div class="notification error"><?= $_SESSION['error'] ?></div>
-        <?php unset($_SESSION['error']); ?>
+            <div class="notification error"><?= $_SESSION['error'] ?></div>
+            <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
         <form action="add_task.php" method="POST">
@@ -80,25 +80,25 @@ $taches = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </thead>
             <tbody>
                 <?php foreach ($taches as $tache) : ?>
-                <tr>
-                    <td><?= htmlspecialchars($tache['tache']) ?></td>
-                    <td><?= htmlspecialchars($tache['description']) ?></td>
-                    <td><?= htmlspecialchars($tache['heure_debut']) ?></td>
-                    <td><?= htmlspecialchars($tache['heure_fin']) ?></td>
-                    <td><?= htmlspecialchars($tache['date_tache']) ?></td>
-                    <td>
-                        <a href='edit_task.php?id=<?= $tache['id'] ?>'>Modifier</a>
-                        <a href='delete_task.php?id=<?= $tache['id'] ?>'
-                            onclick='return confirm("Êtes-vous sûr ?")'>Supprimer</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td><?= htmlspecialchars($tache['tache']) ?></td>
+                        <td><?= htmlspecialchars($tache['description']) ?></td>
+                        <td><?= htmlspecialchars($tache['heure_debut']) ?></td>
+                        <td><?= htmlspecialchars($tache['heure_fin']) ?></td>
+                        <td><?= htmlspecialchars($tache['date_tache']) ?></td>
+                        <td>
+                            <a href='edit_task.php?id=<?= $tache['id'] ?>'>Modifier</a>
+                            <a href='delete_task.php?id=<?= $tache['id'] ?>'
+                                onclick='return confirm("Êtes-vous sûr ?")'>Supprimer</a>
+                        </td>
+                    </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
 
         <div class="pagination">
             <?php for ($i = 1; $i <= $totalPages; $i++) : ?>
-            <a href="?page=<?= $i ?>" class="<?= $page === $i ? 'active' : '' ?>"><?= $i ?></a>
+                <a href="?page=<?= $i ?>" class="<?= $page === $i ? 'active' : '' ?>"><?= $i ?></a>
             <?php endfor; ?>
         </div>
     </div>
