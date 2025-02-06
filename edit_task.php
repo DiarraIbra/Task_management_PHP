@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $stmt = $conn->prepare($sql);
     // 3 ieme etape
     $stmt->execute([$id]);
-    $tache = $stmt->fetchAll();
+    $tache = $stmt->fetch();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
